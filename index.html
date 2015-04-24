@@ -7,30 +7,8 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.4/css/bootstrap.min.css">
         
         <script src="libs/jquery.js"></script>
-        <script src="libs/underscore.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
         <script src="libs/backbone.js"></script>
-        
-        <script>
-            var UserList = Backbone.View.extend({
-               el: '.page',
-               render: function(){
-                   this.$el.html('Content here');
-               }
-            });
-            
-            var Router = Backbone.Router.extend({
-                routes:{
-                    '': 'home'
-                }
-            });
-            var router = new Router();
-            var userList = new UserList();
-            router.on('route:home',function(){
-                userList.render();
-//                console.log('Home Page');
-            });
-            Backbone.history.start();
-        </script>
     </head>
     <body>
         <div class="container">
@@ -38,5 +16,69 @@
             <hr />
             <div class="page"></div>
         </div>
+        
+        <script type="text/template" id="user-list-template">
+        
+            <table class="table striped">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Age</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% _.each(users,function(user)){ %>
+                    <tr>
+                        <td><%= user.get('name')%></td>
+                        <td><%= user.get('age')%></td>
+                    </tr>
+                <% }); %>
+            </tbody>
+            </table>
+        
+        </script>
+                
+        <script>
+//            var path = 'www/Backbone';
+            
+            var Users = Backbone.Collection.extend({
+               url: '/www/Backbone/users.php' 
+            });
+            
+            //Here defined View
+            var UserList = Backbone.View.extend({
+               el: '.page',
+               render: function(){
+                   var self = this;
+                   var users = new Users();
+                   users.fetch({
+                      success:function(users){
+//                          console.log($('#user-list-template'));
+                          var template = _.template($('#user-list-template').html()),{users: users.model});
+                          self.$el.html(template); 
+                      } 
+                   });
+               }
+            });
+            
+            //Define Backbone router obj
+            var Router = Backbone.Router.extend({
+                routes:{
+                    //'' - means home directory
+                    '': 'home'
+                }
+            });
+            
+            var router = new Router();
+            var userList = new UserList();
+            router.on('route:home',function(){
+                //when we go to the home directory, backbone router see that its calles home
+                //and bind it with this event, in witch we launch render function to the userlist object
+                //that defined in userLIst object, and insert data into the template
+                userList.render();
+            });
+            Backbone.history.start();
+        </script>
     </body>
+    
 </html>
