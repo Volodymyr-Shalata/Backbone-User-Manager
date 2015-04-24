@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Backbone application</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.4/css/bootstrap.min.css">
+        
+        <script src="libs/jquery.js"></script>
+        <script src="libs/underscore.js"></script>
+        <script src="libs/backbone.js"></script>
+        
+        <script>
+            var UserList = Backbone.View.extend({
+               el: '.page',
+               render: function(){
+                   this.$el.html('Content here');
+               }
+            });
+            
+            var Router = Backbone.Router.extend({
+                routes:{
+                    '': 'home'
+                }
+            });
+            var router = new Router();
+            var userList = new UserList();
+            router.on('route:home',function(){
+                userList.render();
+//                console.log('Home Page');
+            });
+            Backbone.history.start();
+        </script>
+    </head>
+    <body>
+        <div class="container">
+            <h1>User Manager</h1>
+            <hr />
+            <div class="page"></div>
+        </div>
+    </body>
+</html>
