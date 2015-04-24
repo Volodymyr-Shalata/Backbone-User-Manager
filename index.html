@@ -53,7 +53,6 @@
                    var users = new Users();
                    users.fetch({
                       success:function(users){
-//                          console.log($('#user-list-template'));
                           var template = _.template($('#user-list-template').html()),{users: users.model});
                           self.$el.html(template); 
                       } 
