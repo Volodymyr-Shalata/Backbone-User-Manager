@@ -77,11 +77,11 @@
         };
             
             var Users = Backbone.Collection.extend({
-               url: '/www/Backbone/index.php' 
+               url: '/www/Backbone/users.php' 
             });
             
             var User = Backbone.Model.extend({
-                urlRoot: '/www/Backbone/user.php'
+                urlRoot: '/www/Backbone/users.php'
             });
             
             //Here defined View
@@ -112,10 +112,10 @@
                 saveUser: function(ev){
                     var userDetails = $(ev.currentTarget).serializeObject();
                     var user = new User();
-                    user.save().done(userDetails,
+                    user.save(userDetails,
                     {
-                        success: function(){
-                            router.navigate('', {trigger: true});
+                        success: function(user){
+                            router.navigate('',{trigger:true});
                         }
                     });
                     return false;
