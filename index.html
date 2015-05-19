@@ -5,7 +5,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.4/css/bootstrap.min.css">
-        
+
         <script src="libs/jquery.js"></script>
         <script src="libs/underscore.js"></script>
         <script src="libs/backbone.js"></script>
@@ -25,6 +25,7 @@
                     <th>First Name</th>
                     <th>Last Name</th>
                     <th>Age</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
@@ -33,6 +34,7 @@
                         <td><%= user.get('Fname') %></td>
                         <td><%= user.get('Lname') %></td>
                         <td><%= user.get('Age') %></td>
+                        <td><a href="#/edit/<%= user.id%>" class="btn">Edit</a></td>
                     </tr>
                 <% }); %>
                 
@@ -43,17 +45,21 @@
         
         <script type="text/template" id="edit-user-template">
         <form class="edit-user-form">
-        <legend>Create User</legend>
+        <legend><%= user ? 'Update ' : 'Create '%>User</legend>
         <label>First Name</label><br>
-        <input type="text" name="Fname">
+        <input type="text" name="Fname" value="<%= user ? user.attributes[0].Fname : '' %>">
         <hr />
         <label>Last Name</label><br>
-        <input type="text" name="Lname">
+        <input type="text" name="Lname" value="<%= user ? user.attributes[0].Lname : '' %>">
         <hr />
         <label>Age</label><br>
-        <input type="text" name="Age">
+        <input type="text" name="Age" value="<%= user ? user.attributes[0].Age : '' %>">
         <hr />
-        <button type="submit" class="btn">Create</button>
+        <button type="submit" class="btn"><%= user ? 'Update ' : 'Create '%></button>
+            <% if(user) {%>
+            <input type="hidden" name="id" value="<%= user.id %>">
+            <button class="btn btn-danger delete" >Delete</button>
+            <% }; %>
         </form>
         </script>
                 
@@ -102,22 +108,40 @@
             
             var EditUser = Backbone.View.extend({
                 el: '.page',
-                render: function(){
-                    var template = _.template($('#edit-user-template').html());
-                    this.$el.html(template({})); 
+                render: function(option){
+                    var that = this;
+                    if(option.id){
+                        that.user = new User({id : option.id});
+                        that.user.fetch({
+                            success:function(user){
+                                var template = _.template($("#edit-user-template").html());
+                                that.$el.html(template({user: user}));
+                            }
+                        });
+                    }else{
+                        var template = _.template($('#edit-user-template').html());
+                        that.$el.html(template({user: null}));
+                    }
                 },
                 events:{
-                    'submit .edit-user-form': 'saveUser'
+                    'submit .edit-user-form': 'saveUser',
+                    'click .delete': 'deleteUser'
                 },
                 saveUser: function(ev){
                     var userDetails = $(ev.currentTarget).serializeObject();
                     var user = new User();
                     user.save(userDetails,
-                    {
-                        success: function(user){
+                    {success: function(){router.navigate('',{trigger:true});},
+                    error: function(e){console.log(e);}
+                    });
+                    return false;
+                },
+                deleteUser:function(ev){
+                    this.user.destroy({
+                        success: function(){
                             router.navigate('',{trigger:true});
                         }
-                    });
+                    })
                     return false;
                 }
             });
@@ -127,7 +151,8 @@
                 routes:{
                     //'' - means home directory
                     '': 'home',
-                    'new': 'editUser'
+                    'new': 'editUser',
+                    'edit/:id': 'editUser'
                 }
             });
             
@@ -140,8 +165,8 @@
                 //that defined in userLIst object, and insert data into the template
                 userList.render();
             });
-            router.on('route:editUser',function(){
-                editUser.render();
+            router.on('route:editUser',function(id){
+                editUser.render({id: id});
             });
             
             Backbone.history.start();
