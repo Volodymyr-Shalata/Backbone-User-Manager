@@ -13,6 +13,7 @@ if($_SERVER['REQUEST_METHOD'] == 'PUT') {
 
     $userInfo = $pdo->prepare('UPDATE Users SET Fname = ?, Lname = ?, Age = ? WHERE id = ?');
     $userInfo->execute(array($Fname, $Lname, $Age, $id));
+    echo json_encode(array("status"=> "OK"));
 }
 
 if($_SERVER['REQUEST_METHOD'] == 'GET') {
@@ -44,6 +45,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
 //    header("HTTP/1.1 200 OK");
 //    exit;
     header("HTTP/1.1 200 OK");
+    echo json_encode(array("status"=> "OK"));
 
 }
 if($_SERVER['REQUEST_METHOD'] == 'DELETE') {
@@ -56,6 +58,8 @@ if($_SERVER['REQUEST_METHOD'] == 'DELETE') {
     $stmt = $pdo->prepare($sql);
     $stmt->bindParam(':id', $id, PDO::PARAM_INT);
     $stmt->execute();
+    header("HTTP/1.1 200 OK");
+    echo json_encode(array("status"=> "OK"));
 
 }
 
