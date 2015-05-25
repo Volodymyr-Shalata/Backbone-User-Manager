@@ -113,6 +113,41 @@
             </div>
         </form>
         </script>
+
+    <script type="text/template" id="subscribe-email">
+        <form class="subscribe-email">
+            <div class="pull-right">
+                    <input type="email" placeholder="Enter your email..." id="emailField" >
+                    <button class="btn btn-danger pull-right" type="submit" id="subscrb" >Subscribe</button>
+                <% if(email) {%>
+                    <% if(email.attributes.error) {%>
+                            <div class="alert alert-danger">
+                                <%= email.attributes.error %>
+                                <a href="#"  onclick="$(this).parent().addClass('hide')">
+                                    <i class="glyphicon glyphicon-remove"></i>
+                                </a>
+                            </div>
+                    <% }; %>
+                    <% if(email.attributes.msg) {%>
+                        <div class="text-primary bg-success">
+                            <%= email.attributes.msg %>
+                            <a href="#" onclick="$(this).parent().addClass('hide')">
+                                <i class="glyphicon glyphicon-remove"></i>
+                            </a>
+                        </div>
+                    <% }; %>
+                <% }; %>
+            </div>
+        </form>
+    </script>
+
+    <div class="navbar navbar-inverse navbar-fixed-bottom">
+        <div class="container footer ">
+            <div class="navbar-text pull-left">My site</div>
+            <div class="pull-right email_subscription">
+            </div>
+        </div>
+    </div>
                 
         <script>
             
@@ -132,6 +167,10 @@
             });
             return o;
         };
+
+            var Emails = Backbone.Model.extend({
+                url: '/www/Backbone/email.php'
+            });
             
             var Users = Backbone.Collection.extend({
                url: '/www/Backbone/users.php' 
@@ -198,6 +237,32 @@
                 },
                 wait:true
             });
+
+            var SubscrEmail = Backbone.View.extend({
+                el: ' .email_subscription',
+                render: function(email){
+                    if(email){
+                        var template = _.template($("#subscribe-email").html());
+                        this.$el.html(template({email: email}));
+                    }else{
+                        var template = _.template($("#subscribe-email").html());
+                        this.$el.html(template({email: null}));
+                    }
+                },
+                events:{
+                    'submit .subscribe-email': 'addEmail'
+                },
+                addEmail: function(ev){
+                    var that = this;
+                    var emailVal = $("#emailField").val();
+                    var email = new Emails();
+                    email.save({'email': emailVal}, {success:function(email){
+                        that.render(email);
+                    }});
+                    return false;
+                }
+
+            });
             
             //Define Backbone router obj
             var Router = Backbone.Router.extend({
@@ -212,11 +277,13 @@
             var router = new Router();
             var userList = new UserList();
             var editUser = new EditUser();
+            var subscrEmail = new SubscrEmail();
             router.on('route:home',function(){
                 //when we go to the home directory, backbone router see that its calles home
                 //and bind it with this event, in witch we launch render function to the userlist object
                 //that defined in userLIst object, and insert data into the template
                 userList.render();
+                subscrEmail.render();
             });
             router.on('route:editUser',function(id){
                 editUser.render({id: id});
@@ -224,12 +291,6 @@
             
             Backbone.history.start();
         </script>
-    <div class="navbar navbar-inverse navbar-fixed-bottom">
-        <div class="container">
-            <p class="navbar-text pull-left">My site</p>
-            <a hrefr="#" class="btn btn-danger pull-right">Subscribe on my chanel</a>
-        </div>
-    </div>
     </body>
     
 </html>
