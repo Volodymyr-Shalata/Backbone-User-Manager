@@ -118,7 +118,7 @@
         <form class="subscribe-email">
             <div class="pull-right">
                     <input type="email" placeholder="Enter your email..." id="emailField" >
-                    <button class="btn btn-danger pull-right" type="submit" id="subscrb" >Subscribe</button>
+                    <button class="btn btn-danger pull-right" type="submit" id="subscrb" style="padding:2px">Subscribe</button>
                 <% if(email) {%>
                     <% if(email.attributes.error) {%>
                             <div class="alert alert-danger">
@@ -129,9 +129,9 @@
                             </div>
                     <% }; %>
                     <% if(email.attributes.msg) {%>
-                        <div class="text-primary bg-success">
+                        <div class="alert alert-block alert-success" style="font-size:11px">
                             <%= email.attributes.msg %>
-                            <a href="#" onclick="$(this).parent().addClass('hide')">
+                            <a class="close" data-dismiss="alert" href="#" onclick="$(this).parent().addClass('hide')">
                                 <i class="glyphicon glyphicon-remove"></i>
                             </a>
                         </div>
