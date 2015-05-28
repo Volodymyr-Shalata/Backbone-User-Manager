@@ -12,11 +12,15 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.4/fonts/glyphicons-halflings-regular.ttf">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.4/fonts/glyphicons-halflings-regular.woff">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.4/fonts/glyphicons-halflings-regular.woff2">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-modal/2.2.5/css/bootstrap-modal.css">
 
         <script src="libs/jquery.js"></script>
         <script src="libs/underscore.js"></script>
         <script src="libs/backbone.js"></script>
         <script src="functions.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.4/js/bootstrap.min.js"></script>
+        <script src="libs/jquery.confirm.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap3-dialog/1.34.4/js/bootstrap-dialog.min.js"></script>
     </head>
 
     <body>
@@ -129,15 +133,12 @@
     <script type="text/template" id="subscribe-email">
         <form class="subscribe-email">
             <div class="pull-right">
-                <input type="email" placeholder="Enter your email..." id="emailField" >
+                <input type="text" placeholder="Enter your email..." id="emailField" >
                 <button class="btn btn-danger pull-right" type="submit" id="subscrb" style="padding:2px">Subscribe</button>
                 <% if(email) {%>
                     <% if(email.attributes.error) {%>
-                        <div class="alert alert-danger">
-                            <%= email.attributes.error %>
-                            <a href="#"  onclick="$(this).parent().addClass('hide')">
-                                <i class="glyphicon glyphicon-remove"></i>
-                            </a>
+                        <div>
+                            <button class="btn btn-primary btn-block confirm" type="button">Unsubscribe from newsletter</button>
                         </div>
                     <% }; %>
                     <% if(email.attributes.msg) {%>
@@ -149,6 +150,14 @@
                         </div>
                     <% }; %>
                 <% }; %>
+                <% if (error){%>
+                    <div class="alert alert-danger">
+                        <%= error %>
+                        <a href="#"  onclick="$(this).parent().addClass('hide')">
+                            <i class="glyphicon glyphicon-remove"></i>
+                        </a>
+                    </div>
+                <% };%>
             </div>
         </form>
     </script>
@@ -195,7 +204,20 @@
     <script>
 
         var Emails = Backbone.Model.extend({
-            url: '/www/Backbone/email.php'
+            url: '/www/Backbone/email.php',
+
+            validate_email: function(){
+                var errors = {};
+                var emailVal = $("#emailField").val();
+                var valid_email = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
+                if(!emailVal.match(valid_email)){
+                    errors = {error: "Please, enter the valid email", email: emailVal};
+                }else{
+                    errors = {error: "", email: emailVal};
+                }
+                return errors;
+            }
+
         });
             
         var Users = Backbone.Collection.extend({
@@ -218,7 +240,6 @@
         var UserList = Backbone.View.extend({
            el: '.page',
            render: function(){
-               var users = {};
                var self = this;
                var users = new Users();
                users.fetch({success:function(users){
@@ -255,7 +276,7 @@
                 var userDetails = $(ev.currentTarget).serializeObject();
                 var user = new User();
                 user.save(userDetails,{success: function(){
-                    router.navigate('',{trigger:true});
+                    router.navigate('userManager',{trigger:true});
                 },
                     error: function(e){console.log(e);}
                 });
@@ -272,27 +293,77 @@
 
         var SubscrEmail = Backbone.View.extend({
             el: ' .email_subscription',
-            render: function(email){
-                if(email){
-                    var template = _.template($("#subscribe-email").html());
-                    this.$el.html(template({email: email}));
-                }else{
-                    var template = _.template($("#subscribe-email").html());
-                    this.$el.html(template({email: null}));
-                }
+            render: function(email, error){
+                    if(email != null && typeof error != undefined){
+                        var template = _.template($("#subscribe-email").html());
+                        if(typeof email.attributes.error != undefined ){
+                            this.$el.html(template({email: email, error:null}));
+
+                            var el = $(".confirm");
+                            var that = this;
+                            var confEmail = new Emails();
+                            $(".confirm").click(function(){
+                                BootstrapDialog.confirm({
+                                    type: BootstrapDialog.TYPE_WARNING, // <-- Default value is BootstrapDialog.TYPE_PRIMARY
+                                    title: 'Unsubscribing',
+                                    message: 'Do you want to unsubscribe from newsletter?',
+                                    closable: true, // <-- Default value is false
+                                    draggable: true, // <-- Default value is false
+                                    btnOKLabel: 'Yes', // <-- Default value is 'OK',
+                                    btnCancelLabel: 'No', // <-- Default value is 'Cancel',
+                                    btnOKClass: 'btn-warning',
+                                    callback: function(result) {
+                                        // result will be true if button was click, while it will be false if users close the dialog directly.
+                                        if(result) {
+                                            confEmail.save({email :email.attributes.email, operation: 'unsubscr'},{success:function(data){
+                                                BootstrapDialog.show({
+                                                    type: this.TYPE_SUCCESS,
+                                                    title: 'Unsubscribing confirmation',
+                                                    message: 'You are successfully unsubscribed from the newsletter!',
+                                                    buttons: [{
+                                                        id: 'btn-ok',
+                                                        label: 'OK',
+                                                        cssClass: 'btn-success',
+                                                        autospin: false,
+                                                        action: function(dialogRef){
+                                                            dialogRef.close();
+                                                        }
+                                                    }]
+                                                });
+                                                el.addClass('hide');
+                                            }});
+                                        }else {
+                                            el.addClass('hide');
+                                        }
+                                    }
+                                });
+                            });
+                        }
+                    }else{
+                        var template = _.template($("#subscribe-email").html());
+                        this.$el.html(template({email: null, error:null}));
+                    }
+                    if(error){
+                        var template = _.template($("#subscribe-email").html());
+                        this.$el.html(template({email:null,error: error}));
+                    }
             },
 
             events:{
                 'submit .subscribe-email': 'addEmail'
             },
 
-            addEmail: function(ev){
+            addEmail: function(){
                 var that = this;
-                var emailVal = $("#emailField").val();
                 var email = new Emails();
-                email.save({'email': emailVal}, {success:function(email){
-                    that.render(email);
-                }});
+                var errors = email.validate_email();
+                if(errors.error =='' && errors.email){
+                    email.save({'email': errors.email, operation: 'addEmail'}, {success:function(email){
+                        that.render(email);
+                    }});
+                }else{
+                    that.render(null,errors.error);
+                }
                 return false;
             }
         });
@@ -324,7 +395,6 @@
                 if(loginData){
                     userLogin.save(loginData,
                         {success: function(data){
-                            console.log(data);
                             var template = _.template($("#login-template").html());
                             that.$el.html(template({login: data}));
                             if(data.attributes[0].role == 'admin'){
@@ -370,12 +440,14 @@
         var homePage = new HomePage();
         var login = new LoginView();
 
+        //Always render email View
+        subscrEmail.render();
+
         router.on('route:userManager',function(){
             //when we go to the home directory, backbone router see that its calles home
             //and bind it with this event, in witch we launch render function to the userlist object
             //that defined in userLIst object, and insert data into the template
             userList.render();
-            subscrEmail.render();
         });
         router.on('route:editUser',function(id){
             editUser.render({id: id});
@@ -383,7 +455,6 @@
         router.on('route:home', function(){
             homePage.render();
         });
-
         router.on('route:login', function(){
             login.render();
         });
