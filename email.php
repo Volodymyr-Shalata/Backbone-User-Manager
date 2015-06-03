@@ -25,8 +25,13 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $sql = " DELETE FROM users_email WHERE email=:email ";
                 $delete = $pdo->prepare($sql);
                 $delete->bindParam(':email',$email);
-                $delete->execute();
-                $result['unsubscr'] = true;
+                if($delete->execute()){
+                    $result['unsubscr'] = true;
+                }else{
+                    $result['unsubscr'] = false;
+                }
+                $result['email'] = $email;
+
             }
         }else{
 			//todo Use prepeare statement in PDO insert

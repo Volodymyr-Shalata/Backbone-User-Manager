@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html>
     <head>
         <title>Backbone application</title>
@@ -18,41 +17,45 @@
         <script src="libs/underscore.js"></script>
         <script src="libs/backbone.js"></script>
         <script src="functions.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.4/js/bootstrap.min.js"></script>
         <script src="libs/jquery.confirm.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.4/js/bootstrap.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap3-dialog/1.34.4/js/bootstrap-dialog.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.7.2/js/bootstrap-select.min.js"></script>
+
     </head>
 
     <body>
-    <div class="navbar navbar-inverse">
-        <div class="container">
-            <button class="navbar-toggle" data-toggle="collapse" data-target=".navHeaderCollapse">
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <div class="collapse navbar-collapse navHeaderCollapse">
-                <ul class="nav navbar-nav navbar-left">
-                    <li class="active"><a href="#/home">Home</a></li>
-                    <li class="active"><a href="#/userManager" id="userManager">User Manager</a></li>
-                    <li><a href="#">Blog</a></li>
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Social Media <span class="caret"></span></a>
-                        <ul class="dropdown-menu" role="menu">
-                            <li><a href="#">VK</a></li>
-                            <li><a href="#">Facebook</a></li>
-                            <li><a href="#">Linkedin</a></li>
-                            <li><a href="#">Odnoclasniki</a></li>
-                            <li><a href="#">Twitter</a></li>
+        <div class="navbar navbar-inverse">
+            <div class="container">
+                <button class="navbar-toggle" data-toggle="collapse" data-target=".navHeaderCollapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <div class="collapse navbar-collapse navHeaderCollapse">
+                        <ul class="nav navbar-nav navbar-left">
+                                <li class="active"><a href="#/home">Home</a></li>
+                                <script type="text/template" id="mega-menu">
+                                    <li class="active"><a href="#/userManager" id="userManager">User Manager</a></li>
+                                </script>
+                                <li><a href="#">Blog</a></li>
+                                <li class="dropdown">
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Social Media <span class="caret"></span></a>
+                                    <ul class="dropdown-menu" role="menu">
+                                        <li><a href="#">VK</a></li>
+                                        <li><a href="#">Facebook</a></li>
+                                        <li><a href="#">Linkedin</a></li>
+                                        <li><a href="#">Odnoclasniki</a></li>
+                                        <li><a href="#">Twitter</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="#">About</a></li>
+                                <li><a href="#">Contact</a></li>
+                                <li><a href="#/login">Login</a></li>
                         </ul>
-                    </li>
-                    <li><a href="#">About</a></li>
-                    <li><a href="#">Contact</a></li>
-                    <li><a href="#/login">Login</a></li>
-                </ul>
+                </div>
             </div>
-            </div>
-    </div>
+        </div>
 
     <div class="container">
         <div class="page"></div>
@@ -103,19 +106,33 @@
             <div class="form-group">
                 <label for="Fname" class="col-sm-2 control-label">First Name</label>
                 <div class="col-sm-10">
-                    <input type="text" id="Fname" name="Fname" value="<%= user ? user.attributes[0].Fname : '' %>" placeholder="Name...">
+                    <input type="text" id="Fname" name="Fname" value="<%= user ? user.attributes.userInfo[0].Fname : '' %>" placeholder="Name...">
                 </div>
             </div>
             <div class="form-group">
                 <label for="Lname" class="col-sm-2 control-label">Last Name</label>
                 <div class="col-sm-10">
-                    <input type="text" id="Lname" name="Lname" value="<%= user ? user.attributes[0].Lname : '' %>" placeholder="Last Name...">
+                    <input type="text" id="Lname" name="Lname" value="<%= user ? user.attributes.userInfo[0].Lname : '' %>" placeholder="Last Name...">
                 </div>
             </div>
             <div class="form-group">
                 <label for="Age" class="col-sm-2 control-label">Age</label>
                 <div class="col-sm-10">
-                    <input type="text" id="Age" name="Age" value="<%= user ? user.attributes[0].Age : '' %>" placeholder="Age...">
+                    <input type="text" id="Age" name="Age" value="<%= user ? user.attributes.userInfo[0].Age : '' %>" placeholder="Age...">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="role" class="col-sm-2 control-label">Role</label>
+                <div class="col-sm-2">
+                    <select class="form-control" id="role" name="role">
+                        <% _.each(user.attributes.roles, function(info){ %>
+                            <% if(user.attributes.userInfo[0].role == info){ %>
+                                <option selected><%= info%></option>
+                            <% }else{ %>
+                                <option><%= info%></option>
+                            <% } %>
+                        <% });%>
+                    </select>
                 </div>
             </div>
             <div class="form-group">
@@ -200,7 +217,7 @@
             </div>
         </div>
     </div>
-                
+
     <script>
 
         var Emails = Backbone.Model.extend({
@@ -217,7 +234,6 @@
                 }
                 return errors;
             }
-
         });
             
         var Users = Backbone.Collection.extend({
@@ -262,9 +278,11 @@
                         that.$el.html(template({user: user}));
                     }});
                 }else{
+
+                    //todo ERROR WHEN CREATE NEW USER, IN SELECT LIST
                     var template = _.template($('#edit-user-template').html());
                     that.$el.html(template({user: null}));
-                }
+                 }
             },
 
             events:{
@@ -299,8 +317,9 @@
                         if(typeof email.attributes.error != undefined ){
                             this.$el.html(template({email: email, error:null}));
 
+                            //confirm button
                             var el = $(".confirm");
-                            var that = this;
+
                             var confEmail = new Emails();
                             $(".confirm").click(function(){
                                 BootstrapDialog.confirm({
@@ -316,20 +335,28 @@
                                         // result will be true if button was click, while it will be false if users close the dialog directly.
                                         if(result) {
                                             confEmail.save({email :email.attributes.email, operation: 'unsubscr'},{success:function(data){
-                                                BootstrapDialog.show({
-                                                    type: this.TYPE_SUCCESS,
-                                                    title: 'Unsubscribing confirmation',
-                                                    message: 'You are successfully unsubscribed from the newsletter!',
-                                                    buttons: [{
-                                                        id: 'btn-ok',
-                                                        label: 'OK',
-                                                        cssClass: 'btn-success',
-                                                        autospin: false,
-                                                        action: function(dialogRef){
-                                                            dialogRef.close();
-                                                        }
-                                                    }]
-                                                });
+                                                if(data.attributes.unsubscr){
+                                                    BootstrapDialog.show({
+                                                        type: this.TYPE_SUCCESS,
+                                                        title: 'Unsubscribing confirmation',
+                                                        message: 'You are successfully unsubscribed from the newsletter!',
+                                                        buttons: [{
+                                                            id: 'btn-ok',
+                                                            label: 'OK',
+                                                            cssClass: 'btn-success',
+                                                            autospin: false,
+                                                            action: function(dialogRef){
+                                                                dialogRef.close();
+                                                            }
+                                                        }]
+                                                    });
+                                                }else{
+                                                    BootstrapDialog.show({
+                                                        type: this.TYPE_WARNING,
+                                                        title: 'Error!',
+                                                        message: 'Error... Please, try again later'
+                                                    });
+                                                }
                                                 el.addClass('hide');
                                             }});
                                         }else {
@@ -340,9 +367,11 @@
                             });
                         }
                     }else{
+                        // render by default
                         var template = _.template($("#subscribe-email").html());
                         this.$el.html(template({email: null, error:null}));
                     }
+                //render in case email is not valid
                     if(error){
                         var template = _.template($("#subscribe-email").html());
                         this.$el.html(template({email:null,error: error}));
@@ -397,11 +426,15 @@
                         {success: function(data){
                             var template = _.template($("#login-template").html());
                             that.$el.html(template({login: data}));
-                            if(data.attributes[0].role == 'admin'){
-                                router.navigate('userManager', {trigger:true});
-                            }else{
-                                router.navigate('home', {trigger:true});
-                            }
+                            var templatee = _.template($("#mega-menu").html());
+                            that.$el.html(templatee({login: data}));
+//                            if(data.attributes.error == ""){
+//                                if(data.attributes.role == 'admin'){
+//                                    router.navigate('userManager', {trigger:true});
+//                                }else{
+//                                   router.navigate('home', {trigger:true});
+//                                }
+//                            }
                         }}
                     )
                 }else{
@@ -420,6 +453,41 @@
             }
 
         });
+
+        ///todo write render for handle login megamenu
+        var MenuView = Backbone.View.extend({
+            el: '.mega_menu',
+
+            render: function(loginData){
+                var userLogin = new UserLogin();
+                var that = this;
+
+                if(loginData){
+                    userLogin.save(loginData,
+                            {success: function(data){
+                                var template = _.template($("#login-template").html());
+                                that.$el.html(template({login: data}));
+                                var templatee = _.template($("#mega-menu").html());
+                                that.$el.html(templatee({login: data}));
+                            }}
+                    )
+                }else{
+                    var template = _.template($("#login-template").html());
+                    that.$el.html(template({login: null}));
+                }
+
+            },
+
+            login_press: function(e){
+                e.preventDefault();
+                var loginData = $("#login").serializeObject();
+                if(loginData.length !=0){
+                    this.render(loginData);
+                }
+            }
+
+        });
+        ///
             
         //Define Backbone router obj
         var Router = Backbone.Router.extend({
@@ -458,9 +526,9 @@
         router.on('route:login', function(){
             login.render();
         });
-            
-            Backbone.history.start();
-    </script>
+        Backbone.history.start();
+
+        </script>
 
     </body>
     

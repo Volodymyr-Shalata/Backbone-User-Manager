@@ -10,9 +10,10 @@ if($_SERVER['REQUEST_METHOD'] == 'PUT') {
     $Lname = $put_data['Lname'];
     $Age = $put_data['Age'];
     $id = $put_data['id'];
+    $role = $put_data['role'];
 
-    $userInfo = $pdo->prepare('UPDATE Users SET Fname = ?, Lname = ?, Age = ? WHERE id = ?');
-    $userInfo->execute(array($Fname, $Lname, $Age, $id));
+    $userInfo = $pdo->prepare('UPDATE Users SET Fname = ?, Lname = ?, Age = ?, role = ? WHERE id = ?');
+    $userInfo->execute(array($Fname, $Lname, $Age, $role, $id));
     echo json_encode(array("status"=> "OK"));
 }
 
@@ -24,7 +25,14 @@ if($_SERVER['REQUEST_METHOD'] == 'GET') {
         $userInfo = $pdo->prepare('SELECT * FROM Users WHERE id= :id');
         $userInfo->execute(array('id'=> $id));
         $user = $userInfo->fetchAll(PDO::FETCH_ASSOC);
-        echo json_encode($user);
+        $rolesList = $pdo->query(" SELECT COLUMN_TYPE
+                             FROM information_schema.`COLUMNS`
+                             WHERE TABLE_NAME = 'Users'
+                                   AND COLUMN_NAME = 'role'")->fetchAll(PDO::FETCH_COLUMN);
+        preg_match("/^enum\(\'(.*)\'\)$/", $rolesList[0], $matches);
+        $roles = explode("','", $matches[1]);
+        $return_array = array('userInfo'=> $user, 'roles'=>$roles );
+        echo json_encode($return_array);
     }else{
         $userList = $pdo->prepare('SELECT * FROM Users WHERE id!= :id');
         $userList->execute(array('id'=> 1));
