@@ -1,6 +1,36 @@
-.vcenter {
-    margin-top: 250px;
-}
+/*.vcenter {*/
+    /*margin-top: 250px;*/
+/*}*/
 .margin-left-30{
     margin-left:30px;
+}
+.margin-top-30{
+    margin-top:30px;
+}
+/*.background{*/
+    /*background: url(images/sky.jpg) no-repeat center center fixed;*/
+    /*/!*position: absolute;*!/*/
+    /*top: 0;*/
+    /*left: 0;*/
+    /*right: 0;*/
+    /*bottom: 0;*/
+    /*margin: auto;*/
+    /*min-width: 100%;*/
+    /*min-height: 80%;*/
+/*}*/
+html,
+body {
+    /*css for full size background image*/
+    background: url(images/day.jpg) no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+
+    height: 100%;
+    background-color: white;
+    /*color: #fff;*/
+    /*text-align: center;*/
+    /*text-shadow: 0 1px 3px rgba(0,0,0,.5);*/
+
 }
