@@ -2,9 +2,6 @@
 
 include_once ('PDO_Config.php');
 include_once ('constants.php');
-include ('session.php');
-
-$session = new Session();
 
 if($_SERVER['REQUEST_METHOD'] == 'POST') {
     $json = file_get_contents('php://input');
@@ -23,8 +20,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         $userInfo = array();
         if($user){
-             $session->set('user', $user[0]['Fname']);
-             $userInfo = array("firstName" => $user[0]['Fname'], "lastName" => $user[0]["Lname"], "role" => $user[0]["role"], "is_loged_in"=> 1);
+             $userInfo = array("userName" => $user[0]['login'],"id"=> $user[0]['id'],"firstName" => $user[0]['Fname'], "lastName" => $user[0]["Lname"], "role" => $user[0]["role"], "is_loged_in"=> 1);
              $userInfo['error'] = "";
         }else{
              $userInfo["error"] = LOGIN_ERROR_MSG;
