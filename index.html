@@ -115,34 +115,40 @@
                <div class="form-group">
                    <label for="First Name" class="col-sm-2 control-label white-color">First Name</label>
                    <div class="col-sm-4">
-                       <input type="text" data-minlength="3" class="register form-control" id="First Name" name="First Name" placeholder="First name..." required>
+                       <input type="text" data-minlength="3" class="register form-control" id="First Name" name="first_name" placeholder="First name..." required>
                    </div>
                    <div class="help-block with-errors text-info ">Minimum 3 letters</div>
                </div>
                <div class="form-group">
                    <label for="Last Name" class="col-sm-2 control-label white-color">Last Name</label>
                    <div class="col-sm-4">
-                       <input type="text" class="register form-control"  id="Last Name" name="Last Name" placeholder="Last name...">
+                       <input type="text" class="register form-control"  id="Last Name" name="last_name" placeholder="Last Name...">
+                   </div>
+               </div>
+               <div class="form-group">
+                   <label for="Age" class="col-sm-2 control-label white-color">Age</label>
+                   <div class="col-sm-4">
+                       <input type="text" class="register form-control"  id="Age" name="age" placeholder="Age...">
                    </div>
                </div>
                <div class="form-group">
                    <label for="Email" class="col-sm-2 control-label white-color">Email</label>
                    <div class="col-sm-4">
-                       <input type="email" class="register form-control"  id="Email" name="Email" placeholder="@Email..." data-error="That email address is invalid" required>
+                       <input type="email" class="register form-control"  id="Email" name="email" placeholder="@Email..." data-error="That email address is invalid" required>
                    </div>
                    <div class="help-block with-errors"></div>
                </div>
                <div class="form-group">
                    <label for="Password" class="col-sm-2 control-label white-color">Password</label>
                    <div class="col-sm-4">
-                       <input type="password" data-minlength="6" class="register  form-control"  id="Password" name="Password" placeholder="Password..." required>
+                       <input type="password" data-minlength="6" class="register  form-control"  id="Password" name="password" placeholder="Password..." required>
                    </div>
                    <div class="help-block with-errors"></div>
                </div>
                <div class="form-group">
                    <label for="Confirm Password" class="col-sm-2 control-label white-color">Confirm Password</label>
                    <div class="col-sm-4">
-                       <input type="password" class="register form-control"  id="Confirm Password" name="Confirm Password" placeholder="Confirm Password..." data-match="#Password" data-match-error="Whoops, these don't match" required>
+                       <input type="password" class="register form-control"  id="Confirm Password" name="confirm_assword" placeholder="Confirm Password..." data-match="#Password" data-match-error="Whoops, these don't match" required>
                    </div>
                    <div class="help-block with-errors"></div>
                </div>
@@ -418,15 +424,13 @@
             },
             register: function(ev){
                 ev.preventDefault();
-                var formData = $(this).find('form').find(":input");
-                console.log( $(this).find('form'));
-//                formData.each(function(){
-//                    console.log($(this).attr('name') + $(this).val());
-//                });
-//                console.log($("[name = 'sign_up']").find(":input"));
-                var regDetails = $(ev.currentTarget).serializeObject();
+                var registerData = {};
+                var formData = $("[name = 'sign_up']").find(":input");
+                formData.each(function(){
+                    registerData[$(this).attr('name')] = $(this).val();
+                });
                 var registr = new Registration();
-                registr.save(regDetails,{success: function(){
+                registr.save(registerData,{success: function(){
                     alert(1);
                 }});
             }
