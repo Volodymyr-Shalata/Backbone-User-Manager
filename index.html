@@ -29,6 +29,7 @@
         <script src="libs/backbone.js"></script>
         <script src="functions.js"></script>
         <script src="libs/jquery.confirm.min.js"></script>
+        <script src="libs/validator.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.4/js/bootstrap.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap3-dialog/1.34.4/js/bootstrap-dialog.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.7.2/js/bootstrap-select.min.js"></script>
@@ -110,15 +111,43 @@
     </script>
 
     <script type="text/template" id="sign-up">
-       <form name="sign_up" class="form-horizontal">
-           <div class="form-group">
-               <label for="First Name" class="col-sm-2 control-label">First Name</label>
-               <div class="col-sm-10">
-                   <input type="text" id="First Name" name="First Name" placeholder="First name...">
+           <form name="sign_up" class="form-horizontal margin-top-80"  data-toggle="validator" role="form">
+               <div class="form-group">
+                   <label for="First Name" class="col-sm-2 control-label white-color">First Name</label>
+                   <div class="col-sm-4">
+                       <input type="text" data-minlength="3" class="register form-control" id="First Name" name="First Name" placeholder="First name..." required>
+                   </div>
+                   <div class="help-block with-errors text-info ">Minimum 3 letters</div>
                </div>
-           </div>
-           <button id="register">Register</button>
-       </form>
+               <div class="form-group">
+                   <label for="Last Name" class="col-sm-2 control-label white-color">Last Name</label>
+                   <div class="col-sm-4">
+                       <input type="text" class="register form-control"  id="Last Name" name="Last Name" placeholder="Last name...">
+                   </div>
+               </div>
+               <div class="form-group">
+                   <label for="Email" class="col-sm-2 control-label white-color">Email</label>
+                   <div class="col-sm-4">
+                       <input type="email" class="register form-control"  id="Email" name="Email" placeholder="@Email..." data-error="That email address is invalid" required>
+                   </div>
+                   <div class="help-block with-errors"></div>
+               </div>
+               <div class="form-group">
+                   <label for="Password" class="col-sm-2 control-label white-color">Password</label>
+                   <div class="col-sm-4">
+                       <input type="password" data-minlength="6" class="register  form-control"  id="Password" name="Password" placeholder="Password..." required>
+                   </div>
+                   <div class="help-block with-errors"></div>
+               </div>
+               <div class="form-group">
+                   <label for="Confirm Password" class="col-sm-2 control-label white-color">Confirm Password</label>
+                   <div class="col-sm-4">
+                       <input type="password" class="register form-control"  id="Confirm Password" name="Confirm Password" placeholder="Confirm Password..." data-match="#Password" data-match-error="Whoops, these don't match" required>
+                   </div>
+                   <div class="help-block with-errors"></div>
+               </div>
+               <button id="register" class="btn btn-primary col-sm-offset-2" type="submit">Register</button>
+           </form>
     </script>
         
     <script type="text/template" id="user-list-template">
@@ -389,6 +418,12 @@
             },
             register: function(ev){
                 ev.preventDefault();
+                var formData = $(this).find('form').find(":input");
+                console.log( $(this).find('form'));
+//                formData.each(function(){
+//                    console.log($(this).attr('name') + $(this).val());
+//                });
+//                console.log($("[name = 'sign_up']").find(":input"));
                 var regDetails = $(ev.currentTarget).serializeObject();
                 var registr = new Registration();
                 registr.save(regDetails,{success: function(){
