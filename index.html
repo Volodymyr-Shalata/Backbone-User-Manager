@@ -417,7 +417,6 @@
             render: function(){
                 var template = _.template($("#sign-up").html());
                 this.$el.html(template({}));
-
             },
             events:{
                 'click #register': 'register'
@@ -434,7 +433,6 @@
                     alert(1);
                 }});
             }
-
         });
 
         var EditUser = Backbone.View.extend({

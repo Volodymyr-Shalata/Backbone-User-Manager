@@ -70,19 +70,22 @@ CREATE TABLE IF NOT EXISTS `users` (
   `password` varchar(50) DEFAULT NULL,
   `role` enum('admin','user','owner') DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=59 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=62 DEFAULT CHARSET=latin1;
 
--- Дамп данных таблицы users.users: 8 rows
+-- Дамп данных таблицы users.users: 11 rows
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
 INSERT INTO `users` (`id`, `Fname`, `Lname`, `Age`, `login`, `password`, `role`) VALUES
-	(15, 'snoop2', 'dogg', 23, NULL, NULL, 'user'),
+	(60, 'qew', 'qwe', 12, NULL, NULL, NULL),
+	(15, 'snoop2', 'dogg2', 23, NULL, NULL, 'user'),
+	(59, 'qwe', 'qwe', 0, NULL, NULL, NULL),
 	(13, 'Jeck', 'London', 28, NULL, NULL, 'user'),
 	(12, 'Jorg', 'Vashington', 27, NULL, NULL, 'user'),
 	(11, 'Piter', 'Griffin', 26, NULL, NULL, 'user'),
 	(10, 'Vova', 'Shalata', 25, NULL, NULL, 'user'),
 	(58, 'diana', 'kosheva', 19, 'dididi', 'dididi', 'user'),
 	(52, 'test', 'test', 12, NULL, NULL, 'user'),
-	(56, 'vova', 'shalata', 23, 'vova', 'smoke', 'owner');
+	(56, 'vova', 'shalata', 23, 'vova', 'smoke', 'owner'),
+	(61, 'eee', 'eee', 23, NULL, NULL, NULL);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 
 
