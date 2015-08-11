@@ -19,8 +19,10 @@ if($_SERVER['REQUEST_METHOD'] == 'PUT') {
 
 if($_SERVER['REQUEST_METHOD'] == 'GET') {
     $url = explode('/',$_SERVER['REQUEST_URI']);
+
+    //print_r($url);exit;
     //todo rewrite this check
-    if(count($url) == 5){
+    if(count($url) == 4){
         $id = $url[count($url)-1];
         $userInfo = $pdo->prepare('SELECT * FROM Users WHERE id= :id');
         $userInfo->execute(array('id'=> $id));
