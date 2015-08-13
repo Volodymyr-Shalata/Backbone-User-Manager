@@ -20,7 +20,12 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         $userInfo = array();
         if($user){
-             $userInfo = array("userName" => $user[0]['login'],"id"=> $user[0]['id'],"firstName" => $user[0]['Fname'], "lastName" => $user[0]["Lname"], "role" => $user[0]["role"], "is_loged_in"=> 1);
+             $userInfo = array("userName" => $user[0]['login'],
+                 "id"=> $user[0]['id'],
+                 "firstName" => $user[0]['Fname'],
+                 "lastName" => $user[0]["Lname"],
+                 "role" => $user[0]["role"],
+                 "is_loged_in"=> 1);
              $userInfo['error'] = "";
         }else{
              $userInfo["error"] = LOGIN_ERROR_MSG;

@@ -6,7 +6,6 @@ include('constants.php');
 if($_SERVER['REQUEST_METHOD'] == 'POST') {
     $json = file_get_contents('php://input');
     $obj = json_decode($json,true);
-    //var_dump($obj);exit;
     $email = $obj['email'];
     $operation = strtolower($obj['operation']);
 
@@ -34,7 +33,6 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
 
             }
         }else{
-			//todo Use prepeare statement in PDO insert
 			$insert_email = $pdo->exec("INSERT INTO Users_email (Email) VALUES('$email')");
 			header("HTTP/1.1 200 OK");
 			$result["msg"] = EMAIL_SUBSCRIPTION;

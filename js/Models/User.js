@@ -1,3 +1,11 @@
-/**
- * Created by Володимир on 07.08.2015.
- */
+define([
+    'backbone'
+], function(Backbone){
+
+    var User = Backbone.Model.extend({
+        urlRoot: './backend/users.php'
+    });
+
+    return User;
+
+});

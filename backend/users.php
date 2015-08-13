@@ -20,9 +20,7 @@ if($_SERVER['REQUEST_METHOD'] == 'PUT') {
 if($_SERVER['REQUEST_METHOD'] == 'GET') {
     $url = explode('/',$_SERVER['REQUEST_URI']);
 
-    //print_r($url);exit;
-    //todo rewrite this check
-    if(count($url) == 4){
+    if(count($url) == 5){
         $id = $url[count($url)-1];
         $userInfo = $pdo->prepare('SELECT * FROM Users WHERE id= :id');
         $userInfo->execute(array('id'=> $id));
@@ -49,18 +47,13 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
     $Fname = $obj['Fname'];
     $Lname = $obj['Lname'];
     $Age = $obj['Age'];
-    
-    //todo Use prepeare statement in PDO insert
+
     $result = $pdo->exec("INSERT INTO Users (Fname, Lname, Age) VALUES('$Fname', '$Lname', '$Age')");
-//    header("HTTP/1.1 200 OK");
-//    exit;
     header("HTTP/1.1 200 OK");
     echo json_encode(array("status"=> "OK"));
 
 }
 if($_SERVER['REQUEST_METHOD'] == 'DELETE') {
-    //$json = file_get_contents('php://input');
-    //$obj = json_decode($json,true);
     $url = explode('/',$_SERVER['REQUEST_URI']);
     $id = $url[count($url)-1];
 

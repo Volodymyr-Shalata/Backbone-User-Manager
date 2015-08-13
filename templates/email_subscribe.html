@@ -1,10 +1,30 @@
-<!DOCTYPE html>
-<html>
-<head lang="en">
-    <meta charset="UTF-8">
-    <title></title>
-</head>
-<body>
 
-</body>
-</html>
+    <form class="subscribe-email">
+        <div class="pull-right">
+            <input type="text" placeholder="Enter your email..." id="emailField" >
+            <button class="btn btn-danger pull-right" type="submit" id="subscrb" style="padding:2px">Subscribe</button>
+            <% if(email) {%>
+            <% if(email.attributes.error) {%>
+            <div>
+                <button class="btn btn-primary btn-block confirm" type="button">Unsubscribe from newsletter</button>
+            </div>
+            <% }; %>
+            <% if(email.attributes.msg) {%>
+            <div class="alert alert-block alert-success" style="font-size:11px">
+                <%= email.attributes.msg %>
+                <a class="close" data-dismiss="alert" href="#" onclick="$(this).parent().addClass('hide')">
+                    <i class="glyphicon glyphicon-remove"></i>
+                </a>
+            </div>
+            <% }; %>
+            <% }; %>
+            <% if (error){%>
+            <div class="alert alert-danger">
+                <%= error %>
+                <a href="#"  onclick="$(this).parent().addClass('hide')">
+                    <i class="glyphicon glyphicon-remove"></i>
+                </a>
+            </div>
+            <% };%>
+        </div>
+    </form>

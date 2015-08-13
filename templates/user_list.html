@@ -1,10 +1,26 @@
-<!DOCTYPE html>
-<html>
-<head lang="en">
-    <meta charset="UTF-8">
-    <title></title>
-</head>
-<body>
 
-</body>
-</html>
+    <div class="text-info">
+        <h1>User Manager</h1>
+        <hr />
+    </div>
+    <a href="#/new" class="btn btn-primary"><i class="glyphicon glyphicon-user"></i>&nbsp;New User</a>
+    <table class="table table-striped table-hover">
+        <thead>
+        <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Age</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <% _.each(users,function(user){ %>
+        <tr class="info">
+            <td><%= user.Fname %></td>
+            <td><%= user.Lname %></td>
+            <td><%= user.Age %></td>
+            <td><a href="#/edit/<%= user.id%>" class="btn btn-warning"><i class="glyphicon glyphicon-pencil"></i>&nbsp;   Edit</a></td>
+        </tr>
+        <% }); %>
+        </tbody>
+    </table>

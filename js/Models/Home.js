@@ -1,3 +1,10 @@
-/**
- * Created by Володимир on 07.08.2015.
- */
+define([
+    'backbone'
+], function(Backbone){
+    var Home = Backbone.Model.extend({
+        urlRoot: './backend/home.php'
+    });
+
+    return Home;
+
+});

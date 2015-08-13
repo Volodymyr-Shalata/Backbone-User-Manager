@@ -1,26 +1,35 @@
-/**
- * Created by Володимир on 10.08.2015.
- */
+///**
+// * Created by Володимир on 10.08.2015.
+// */
 var gulp  = require('gulp');
-//var concat = require('gulp-concat');
-//var uglify = require('gulp-uglify');
-//var rename = require('gulp-rename');
-//
-//// Concatenate & Minify JS
-//gulp.task('scripts', function() {
-//    return gulp.src('js/*.js')
-//        .pipe(concat('all.js'))
-//        .pipe(gulp.dest('dist'))
-//        .pipe(rename('all.min.js'))
-//        .pipe(uglify())
-//        .pipe(gulp.dest('dist'));
-//});
-//
-//// Watch Files For Changes
-//gulp.task('watch', function() {
-//    gulp.watch('js/**/*.js', ['lint', 'scripts']);
-//    gulp.watch('scss/*.scss', ['sass']);
-//});
-gulp.task('default', function() {
-    // place code for your default task here
+//var autoprefixer = require('gulp-autoprefixer');
+//var htmlmin = require('gulp-htmlmin');
+var less = require('gulp-less');
+var sass = require('gulp-sass');
+var livereload = require('gulp-livereload');
+var watch = require('gulp-watch');
+var uglify = require('gulp-uglify');
+var lr = require('tiny-lr'),
+    server = lr();
+
+gulp.task('scripts', function(){
+    return gulp.src('js/**/*.js')
+        .pipe(uglify()) /*для зжатия js*/
+        .pipe(livereload());
+
 });
+
+gulp.task('html', function() {
+    return gulp.src('templates/**/*.html')
+        .pipe(livereload());
+        //.pipe(notify({ message: 'HTML task complete' }));
+});
+
+gulp.task('watch', function () {
+    livereload.listen();
+        gulp.watch('js/**', ['scripts']);
+        gulp.watch('templates/**/*.html', ['html']);
+});
+
+
+gulp.task('default', ['scripts','html', 'watch']);

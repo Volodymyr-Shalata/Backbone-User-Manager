@@ -1,3 +1,11 @@
-/**
- * Created by Володимир on 07.08.2015.
- */
+define([
+    'backbone'
+], function(Backbone){
+
+    var Registration = Backbone.Model.extend({
+        urlRoot: './backend/registration.php'
+    });
+
+    return Registration;
+
+});

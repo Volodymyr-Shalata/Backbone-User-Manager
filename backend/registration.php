@@ -7,7 +7,6 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     $reg_data = json_decode(file_get_contents('php://input'),true);
 
-    //var_dump($reg_data);exit;
 
     $first_name = $reg_data['first_name'];
     $last_name = $reg_data['last_name'];
