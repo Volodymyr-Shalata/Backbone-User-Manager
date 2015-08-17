@@ -16,12 +16,13 @@ require.config({
         user_list: '../templates/user_list.html',
         edit_user: '../templates/users/edit_user.html',
         MenuView : 'Views/MenuView',
-        bootstrap: 'libs/bootstrapDialog',
+        bootstrapDialog: 'libs/bootstrapDialog',
         confirm :  'libs/jquery.confirm.min',
         cookie: 'libs/jquery.cookie',
-        functions: 'functions'
+        functions: 'functions',
+        bootstrap :"libs/bootstrap.min",
+        validator: 'libs/jquery.validate.min'
         //BootstrapDialog: "libs/bootstrapDialog",
-        //"bootstrap" :"https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.4/js/bootstrap.min",
         //"bootstrapSelect" :"https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.7.2/js/bootstrap-select.min"
     },
     shim: {
@@ -33,6 +34,12 @@ require.config({
             exports: 'Backbone'
         },
         'functions' :{
+            deps: ['jquery']
+        },
+        'bootstrap' :{
+            deps: ['jquery']
+        },
+        'validator':{
             deps: ['jquery']
         }
     }

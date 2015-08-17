@@ -9,7 +9,7 @@ define([
     'backbone',
     'text!email_subscribe',
     'Models/Email',
-    'bootstrap'
+    'bootstrapDialog'
 
 ], function($, _, Backbone, subscribe_template, EmailModel,BootstrapDialog){
 
