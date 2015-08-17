@@ -26,7 +26,6 @@ define ([
             });
             var registr = new Registration();
             registr.save(registerData,{success: function(){
-                alert(1);
             }});
         }
     });

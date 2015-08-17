@@ -57,9 +57,6 @@ define([
         menuView.render();
 
         router.on('route:userManager',function(){
-            //when we go to the home directory, backbone router see that its calles home
-            //and bind it with this event, in witch we launch render function to the userlist object
-            //that defined in userLIst object, and insert data into the template
             userList.render();
         });
         router.on('route:editUser',function(id){

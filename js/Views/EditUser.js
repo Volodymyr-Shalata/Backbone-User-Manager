@@ -24,9 +24,6 @@ define ([
                         that.$el.html(template({user: user}));
                     }});
             }else{
-
-                //todo ERROR WHEN CREATE NEW USER, IN SELECT LIST
-                var roles = {'admin': 'admin', 'owner' : 'owner','user': 'user'};
                 var template = _.template(editUserTemplate);
                 that.$el.html(template({user: null}));
             }

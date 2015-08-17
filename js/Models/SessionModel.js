@@ -22,7 +22,6 @@ define([
         },
         save: function(name, value){
             switch(name){
-                /// Session not working correctle because didn`t put break after case statement
                 case 'user_id'  :{$.cookie('user_id', value);break;}
                 case 'is_logged':{$.cookie('is_logged', true);break;}
                 case 'user_name':{$.cookie('user_name', value);break;}

@@ -2,10 +2,6 @@
  * Created by Володимир on 07.08.2015.
  */
 
-// Filename: main.js
-
-// Require.js allows us to configure shortcut alias
-// There usage will become more apparent further along in the tutorial.
 require.config({
     paths: {
         jquery: 'libs/jquery',
@@ -29,10 +25,6 @@ require.config({
         //"bootstrapSelect" :"https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.7.2/js/bootstrap-select.min"
     },
     shim: {
-        //'plugins\chosen': {
-        //    deps: [ 'jquery' ],
-        //    exports: 'jQuery.fn.chosen'
-        //},
         'cookie': {
             deps: ['jquery']
         },
@@ -47,9 +39,7 @@ require.config({
     });
 
 require([
-    // Load our router module and pass it to our definition function
     'router',
 ], function(Router){
-    // The "router" dependency is passed in as "Router"
     Router.initialize();
 });

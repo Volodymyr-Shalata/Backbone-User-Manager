@@ -21,22 +21,18 @@ define([
                 if(typeof email.attributes.error != undefined ){
                     this.$el.html(template({email: email, error:null}));
 
-                    //confirm button
-                    //var el = $(".confirm");
-
                     var confEmail = new EmailModel();
                     $(".confirm").click(function(){
                         BootstrapDialog.confirm({
-                            type: BootstrapDialog.TYPE_WARNING, // <-- Default value is BootstrapDialog.TYPE_PRIMARY
+                            type: BootstrapDialog.TYPE_WARNING,
                             title: 'Unsubscribing',
                             message: 'Do you want to unsubscribe from newsletter?',
-                            closable: true, // <-- Default value is false
-                            draggable: true, // <-- Default value is false
-                            btnOKLabel: 'Yes', // <-- Default value is 'OK',
-                            btnCancelLabel: 'No', // <-- Default value is 'Cancel',
+                            closable: true,
+                            draggable: true,
+                            btnOKLabel: 'Yes',
+                            btnCancelLabel: 'No',
                             btnOKClass: 'btn-warning',
                             callback: function(result) {
-                                // result will be true if button was click, while it will be false if users close the dialog directly.
                                 if(result) {
                                     confEmail.save({email :email.attributes.email, operation: 'unsubscr'},{success:function(data){
                                         if(data.attributes.unsubscr){
