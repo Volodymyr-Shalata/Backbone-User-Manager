@@ -64,16 +64,26 @@ define ([
             'click #register': 'register'
         },
         register: function(ev){
-            ev.preventDefault();
+            var error = false;
             var registerData = {};
-            var formData = $("[name = 'sign_up']").find(":input");
-            formData.each(function(){
-                registerData[$(this).attr('name')] = $(this).val();
+            ev.preventDefault();
+            $.each($('.form-group'), function(){
+                if($(this).hasClass('has-error')){
+                    error = true;
+                }
             });
-            var registr = new Registration();
+            if(error){
+                return false;
+            }else{
+                var formData = $("[name = 'sign_up']").find(":input");
+                formData.each(function(){
+                    registerData[$(this).attr('name')] = $(this).val();
+                });
+                var registr = new Registration();
                 registr.save(registerData,{success: function(){
                     Backbone.history.navigate('#/login',{trigger:true});
-            }});
+                }});
+            }
         }
     });
 
